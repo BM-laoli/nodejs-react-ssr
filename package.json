@@ -1,0 +1,42 @@
+{
+  "name": "SSR-T1",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "npm-run-all --parallel dev:**",
+    "dev:clear": "rm -rf ./src/dist/**",
+    "dev:clint": "./node_modules/.bin/babel ./src -d ./public/js -w --ignore 'src/server/*.js' ",
+    "dev:server": "./node_modules/.bin/babel ./src -d ./dist -w",
+    "dev:nodemon": "nodemon ./dist"
+  },
+  "dependencies": {
+    "@babel/cli": "^7.19.3",
+    "@babel/core": "^7.19.6",
+    "@babel/plugin-proposal-class-properties": "^7.18.6",
+    "@babel/plugin-proposal-decorators": "^7.20.0",
+    "@babel/plugin-transform-runtime": "^7.19.6",
+    "@babel/preset-env": "^7.19.4",
+    "@babel/preset-react": "^7.18.6",
+    "babelify": "^10.0.0",
+    "browserify": "^17.0.0",
+    "del": "^7.0.0",
+    "ejs": "^3.1.8",
+    "express": "^4.18.2",
+    "gulp": "^4.0.2",
+    "gulp-babel": "^8.0.0",
+    "gulp-clean": "^0.4.0",
+    "npm-run-all": "^4.1.5",
+    "pump": "^3.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router": "^6.4.2",
+    "react-router-dom": "^6.4.2",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0"
+  },
+  "devDependencies": {
+    "babel-loader": "^9.0.1",
+    "webpack-merge": "^5.8.0"
+  }
+}
