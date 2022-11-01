@@ -4,11 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "npm-run-all --parallel dev:**",
-    "dev:clear": "rm -rf ./src/dist/**",
-    "dev:clint": "./node_modules/.bin/babel ./src -d ./public/js -w --ignore 'src/server/*.js' ",
-    "dev:server": "./node_modules/.bin/babel ./src -d ./dist -w",
-    "dev:nodemon": "nodemon ./dist"
+    "dev": "gulp dev"
   },
   "dependencies": {
     "@babel/cli": "^7.19.3",

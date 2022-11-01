@@ -2,7 +2,7 @@ THIS_DIR=$(cd -P "$(dirname "$(readlink "${BASH_SOURCE[0]}" || echo "${BASH_SOUR
 
 echo $THIS_DIR
 
-# source "${THIS_DIR}/../../"
 
 cd "${THIS_DIR}/../"
-nodemon ./dist
+
+nodemon --inspect ./dist

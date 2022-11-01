@@ -4,25 +4,21 @@ const babelify = require("babelify");
 const browserify = require("browserify"); // 插件,
 const source = require("vinyl-source-stream"); // 转成stream流
 const buffer = require("vinyl-buffer"); // 转成二进制流（buffer）
-const { series, parallel } = require("gulp");
-const resolveDir = (dir) => path.resolve(__dirname, dir);
+const { series } = require("gulp");
 const { watch } = require("gulp");
-const del = require("gulp-clean");
-const pump = require("pump");
-const babel = require("gulp-babel");
 const { exec, execSync, spawnSync } = require("child_process");
 
-// dev client
-const clean_client = (done) => {
-  pump([gulp.src("./public/js/*.js"), del()], done);
-};
-const clean_server = (done) => {
-  pump([gulp.src("./dist"), del()], done);
+// 原产物
+const clean = (done) => {
+  execSync('rm -rf ./dist')
+  execSync('rm -rf ./public/js')
+  done()
 };
 
+// 构建 浏览器使用的js 绑定事件
 const _script = () => {
   return browserify("./src/client/index.js")
-    .transform("babelify", {
+    .transform(babelify, {
       presets: ["@babel/preset-env", "@babel/preset-react"],
       plugins: [
         "@babel/plugin-transform-runtime",
@@ -36,6 +32,7 @@ const _script = () => {
     .pipe(gulp.dest("./public/js"));
 };
 
+// 构建 node server 需要的 sst
 const _scriptServer = (cb) => {
   // 执行一段 shell  就好了 不需要merge
   exec(
@@ -47,21 +44,27 @@ const _scriptServer = (cb) => {
   );
 };
 
-let isOpen = false;
+// cv ejs template
+const moveTemplate = (done) => {
+  execSync('cp -Rf  ./src/index.ejs  ./dist '  )
+  done()
+}
 
-const start = () => {
+// 启动server
+let isOpen = false;
+const startServer = () => {
   if (isOpen) return;
   isOpen = true;
 
-  const scriptPath = (script) => path.join(__dirname, "dist", script);
+  const scriptPath = (script) => path.join(__dirname, 'script', script);
   execSync(`chmod u+x ./script/nodemon.sh`);
+
   // 执行一段 shell  就好了 不需要merge
   spawnSync(
     "open",
-    [
-      "-a",
+    ["-a",
       "terminal",
-      "/Users/administrator/Desktop/origin/react-ssr/SSR-T1/script/nodemon.sh",
+      scriptPath('nodemon.sh'),
     ],
     {
       cwd: path.join(__dirname),
@@ -69,15 +72,20 @@ const start = () => {
   );
 };
 
+// 初始化
+const init = (done) => {
+  series(clean, _script, _scriptServer, moveTemplate, startServer)()
+  done()
+}
+
 // dev server & client
 const server_build = (done) => {
   const watcher = watch(["./src/**/*.js"]);
   watcher.on("change", () => {
     console.log("update file...");
-    series(clean_client, clean_server, _script, _scriptServer)();
-    start();
+    series(clean, _script, _scriptServer, moveTemplate, startServer)()
   });
   done();
 };
 
-exports.dev = parallel(server_build);
+exports.dev = series(init , server_build);

@@ -1,14 +1,14 @@
 import React from "react";
 import { Link } from 'react-router-dom';
 
-const Home = () => {
+const Production = () => {
   return (
     <div>
-      <h1>我是首页</h1>
+      <h1> 产品</h1>
       <br></br>
-      <Link to="/production">  去 产品页面</Link>
+      <Link to="/">  首页 </Link>
     </div>
   );
 };
 
-export default Home;
+export default Production;
