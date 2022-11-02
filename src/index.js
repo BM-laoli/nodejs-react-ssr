@@ -6,8 +6,6 @@ const ejs = require("ejs");
 const { join } = require("path");
 const { createProxyMiddleware } = require("http-proxy-middleware");
 import { render } from "./server";
-import Home from "./client/modules/Home";
-import Production from "./client/modules/Production";
 
 const app = express();
 app.use(express.static("public"));
@@ -38,33 +36,18 @@ const htmlTLP = (reactContentStream, data) => `
   </script>
 
   <!-- 绑定事件 -->
-  <script src="./js/app.js"></script>
+  <script src="/js/app.js"></script>
 </body>
 </html>
 `;
 
-app.get("/", async (req, res) => {
-  res.setHeader("Content-Type", "text/html");
-  const value = await axios.get("http://localhost:3030/api/users");
-  const data = {
-    name: "",
-    page: "",
-    message: "",
-    list: [],
-    // 页面特定的 每个页面都不一样
-    data: value.data.data,
-  };
-  const reactContentStream = render(req.path, data, Home);
-
-  res.send(htmlTLP(reactContentStream, data));
-});
-
-app.get("/production", async (req, res) => {
+app.get("/pro/*", async (req, res) => {
   res.setHeader("Content-Type", "text/html");
   const data = {
     name: "",
     page: "",
-    message: "",
+    message: "pro",
+    basename: "pro",
     list: [],
     // 页面特定的 每个页面都不一样
     data: [
@@ -75,8 +58,25 @@ app.get("/production", async (req, res) => {
     ],
   };
 
-  const reactContentStream = render(req.path, data, Production);
+  const reactContentStream = render(req.path, data);
 
+  res.send(htmlTLP(reactContentStream, data));
+});
+
+app.get("/home/*", async (req, res) => {
+  res.setHeader("Content-Type", "text/html");
+  const value = await axios.get("http://localhost:3030/api/users");
+  const data = {
+    name: "",
+    page: "home",
+    message: "",
+    basename: "home",
+    list: [],
+    // 页面特定的 每个页面都不一样
+    data: value.data.data,
+  };
+  const reactContentStream = render(req.path, data);
+  console.log("reactContentStream", reactContentStream);
   res.send(htmlTLP(reactContentStream, data));
 });
 

@@ -42337,10 +42337,36 @@ var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/sli
 var _react = _interopRequireWildcard(require("react"));
 var _reactDom = _interopRequireDefault(require("react-dom"));
 var _reactRouterDom = require("react-router-dom");
-var _Router = _interopRequireDefault(require("../shared/Router"));
 var _useInitState = require("../shared/hooks/useInitState");
+var _P = _interopRequireDefault(require("./modules/Production/page/P1"));
+var _P2 = _interopRequireDefault(require("./modules/Production/page/P2"));
+var _Hom = _interopRequireDefault(require("./modules/Home/page/Hom1"));
+var _Hom2 = _interopRequireDefault(require("./modules/Home/page/Hom2"));
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+var PRouter = function PRouter(props) {
+  return /*#__PURE__*/_react["default"].createElement(_reactRouterDom.Routes, {
+    basename: props.basename
+  }, /*#__PURE__*/_react["default"].createElement(_reactRouterDom.Route, {
+    path: "/",
+    element: /*#__PURE__*/_react["default"].createElement(_P["default"], null)
+  }), /*#__PURE__*/_react["default"].createElement(_reactRouterDom.Route, {
+    path: "/pro/p2",
+    element: /*#__PURE__*/_react["default"].createElement(_P2["default"], null)
+  }));
+};
+var HRouter = function HRouter(props) {
+  return /*#__PURE__*/_react["default"].createElement(_reactRouterDom.Routes, {
+    basename: props.basename
+  }, /*#__PURE__*/_react["default"].createElement(_reactRouterDom.Route, {
+    path: "/",
+    element: /*#__PURE__*/_react["default"].createElement(_Hom["default"], null)
+  }), /*#__PURE__*/_react["default"].createElement(_reactRouterDom.Route, {
+    path: "home/h2",
+    element: /*#__PURE__*/_react["default"].createElement(_Hom2["default"], null)
+  }));
+};
+
 // 脱水
 var get_initState = function get_initState() {
   return window.__INIT_STATE__;
@@ -42351,14 +42377,18 @@ var App = function App() {
     state = _useReducer2[0],
     dispatch = _useReducer2[1];
   return /*#__PURE__*/_react["default"].createElement(_reactRouterDom.BrowserRouter, {
-    basename: "/home"
+    basename: state.page
   }, /*#__PURE__*/_react["default"].createElement(_useInitState.InitStateContext.Provider, {
     value: [state, dispatch]
-  }, /*#__PURE__*/_react["default"].createElement(_Router["default"], null)));
+  }, state.page === "home" && /*#__PURE__*/_react["default"].createElement(HRouter, {
+    basename: state.basename
+  }), state.page === "pro" && /*#__PURE__*/_react["default"].createElement(PRouter, {
+    basename: state.basename
+  })));
 };
 _reactDom["default"].hydrate( /*#__PURE__*/_react["default"].createElement(App, null), document.getElementById("root"));
 
-},{"../shared/Router":44,"../shared/hooks/useInitState":45,"@babel/runtime/helpers/interopRequireDefault":4,"@babel/runtime/helpers/slicedToArray":7,"@babel/runtime/helpers/typeof":8,"react":36,"react-dom":21,"react-router-dom":27}],42:[function(require,module,exports){
+},{"../shared/hooks/useInitState":46,"./modules/Home/page/Hom1":42,"./modules/Home/page/Hom2":43,"./modules/Production/page/P1":44,"./modules/Production/page/P2":45,"@babel/runtime/helpers/interopRequireDefault":4,"@babel/runtime/helpers/slicedToArray":7,"@babel/runtime/helpers/typeof":8,"react":36,"react-dom":21,"react-router-dom":27}],42:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -42368,8 +42398,36 @@ Object.defineProperty(exports, "__esModule", {
 exports["default"] = void 0;
 var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
 var _react = _interopRequireDefault(require("react"));
+var _useInitState3 = require("../../../../shared/hooks/useInitState");
+var _reactHelmet = require("react-helmet");
 var _reactRouterDom = require("react-router-dom");
-var _useInitState3 = require("../../../shared/hooks/useInitState");
+var Home = function Home(props) {
+  var _state$data;
+  var _useInitState = (0, _useInitState3.useInitState)(),
+    _useInitState2 = (0, _slicedToArray2["default"])(_useInitState, 1),
+    state = _useInitState2[0];
+  return /*#__PURE__*/_react["default"].createElement(_react["default"].Fragment, null, /*#__PURE__*/_react["default"].createElement("div", null, /*#__PURE__*/_react["default"].createElement("ul", null, state === null || state === void 0 ? void 0 : (_state$data = state.data) === null || _state$data === void 0 ? void 0 : _state$data.map(function (item) {
+    return /*#__PURE__*/_react["default"].createElement("li", {
+      key: item.id
+    }, item.email);
+  })), /*#__PURE__*/_react["default"].createElement("br", null), /*#__PURE__*/_react["default"].createElement("h1", null, "Hom1"), /*#__PURE__*/_react["default"].createElement(_reactRouterDom.Link, {
+    to: "/home/h2"
+  }, "\u524D\u5F80H2x")));
+};
+var _default = Home;
+exports["default"] = _default;
+
+},{"../../../../shared/hooks/useInitState":46,"@babel/runtime/helpers/interopRequireDefault":4,"@babel/runtime/helpers/slicedToArray":7,"react":36,"react-helmet":23,"react-router-dom":27}],43:[function(require,module,exports){
+"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = void 0;
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+var _react = _interopRequireDefault(require("react"));
+var _useInitState3 = require("../../../../shared/hooks/useInitState");
 var _reactHelmet = require("react-helmet");
 var Home = function Home(props) {
   var _state$data;
@@ -42380,14 +42438,14 @@ var Home = function Home(props) {
     return /*#__PURE__*/_react["default"].createElement("li", {
       key: item.id
     }, item.email);
-  })), /*#__PURE__*/_react["default"].createElement("br", null), /*#__PURE__*/_react["default"].createElement("h1", null, "\u6211\u662F\u9996\u9875"), /*#__PURE__*/_react["default"].createElement("a", {
-    href: "/production"
-  }, "production")));
+  })), /*#__PURE__*/_react["default"].createElement("br", null), /*#__PURE__*/_react["default"].createElement("h1", null, "Hom2"), /*#__PURE__*/_react["default"].createElement("a", {
+    href: "/pro/"
+  }, "pro")));
 };
 var _default = Home;
 exports["default"] = _default;
 
-},{"../../../shared/hooks/useInitState":45,"@babel/runtime/helpers/interopRequireDefault":4,"@babel/runtime/helpers/slicedToArray":7,"react":36,"react-helmet":23,"react-router-dom":27}],43:[function(require,module,exports){
+},{"../../../../shared/hooks/useInitState":46,"@babel/runtime/helpers/interopRequireDefault":4,"@babel/runtime/helpers/slicedToArray":7,"react":36,"react-helmet":23}],44:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -42397,26 +42455,25 @@ Object.defineProperty(exports, "__esModule", {
 exports["default"] = void 0;
 var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
 var _react = _interopRequireDefault(require("react"));
-var _reactRouterDom = require("react-router-dom");
-var _useInitState3 = require("../../../shared/hooks/useInitState");
+var _useInitState3 = require("../../../../shared/hooks/useInitState");
 var _reactHelmet = require("react-helmet");
-var Production = function Production(props) {
+var Home = function Home(props) {
   var _state$data;
   var _useInitState = (0, _useInitState3.useInitState)(),
     _useInitState2 = (0, _slicedToArray2["default"])(_useInitState, 1),
     state = _useInitState2[0];
-  return /*#__PURE__*/_react["default"].createElement(_react["default"].Fragment, null, /*#__PURE__*/_react["default"].createElement("div", null, /*#__PURE__*/_react["default"].createElement("h1", null, " \u4EA7\u54C1"), /*#__PURE__*/_react["default"].createElement("br", null), /*#__PURE__*/_react["default"].createElement(_reactRouterDom.Link, {
-    to: "/"
-  }, " \u9996\u9875 "), /*#__PURE__*/_react["default"].createElement("br", null), /*#__PURE__*/_react["default"].createElement("ul", null, state === null || state === void 0 ? void 0 : (_state$data = state.data) === null || _state$data === void 0 ? void 0 : _state$data.map(function (item) {
+  return /*#__PURE__*/_react["default"].createElement(_react["default"].Fragment, null, /*#__PURE__*/_react["default"].createElement("div", null, /*#__PURE__*/_react["default"].createElement("ul", null, state === null || state === void 0 ? void 0 : (_state$data = state.data) === null || _state$data === void 0 ? void 0 : _state$data.map(function (item) {
     return /*#__PURE__*/_react["default"].createElement("li", {
       key: item.id
     }, item.email);
-  }))));
+  })), /*#__PURE__*/_react["default"].createElement("br", null), /*#__PURE__*/_react["default"].createElement("h1", null, "P1"), /*#__PURE__*/_react["default"].createElement("a", {
+    href: "/production"
+  }, "production")));
 };
-var _default = Production;
+var _default = Home;
 exports["default"] = _default;
 
-},{"../../../shared/hooks/useInitState":45,"@babel/runtime/helpers/interopRequireDefault":4,"@babel/runtime/helpers/slicedToArray":7,"react":36,"react-helmet":23,"react-router-dom":27}],44:[function(require,module,exports){
+},{"../../../../shared/hooks/useInitState":46,"@babel/runtime/helpers/interopRequireDefault":4,"@babel/runtime/helpers/slicedToArray":7,"react":36,"react-helmet":23}],45:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -42424,23 +42481,27 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports["default"] = void 0;
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
 var _react = _interopRequireDefault(require("react"));
-var _reactRouterDom = require("react-router-dom");
-var _Home = _interopRequireDefault(require("../client/modules/Home"));
-var _Production = _interopRequireDefault(require("../client/modules/Production"));
-var Router = function Router(props) {
-  return /*#__PURE__*/_react["default"].createElement(_reactRouterDom.Routes, null, /*#__PURE__*/_react["default"].createElement(_reactRouterDom.Route, {
-    path: "/",
-    element: /*#__PURE__*/_react["default"].createElement(_Home["default"], null)
-  }), /*#__PURE__*/_react["default"].createElement(_reactRouterDom.Route, {
-    path: "/production",
-    element: /*#__PURE__*/_react["default"].createElement(_Production["default"], null)
-  }));
+var _useInitState3 = require("../../../../shared/hooks/useInitState");
+var _reactHelmet = require("react-helmet");
+var Home = function Home(props) {
+  var _state$data;
+  var _useInitState = (0, _useInitState3.useInitState)(),
+    _useInitState2 = (0, _slicedToArray2["default"])(_useInitState, 1),
+    state = _useInitState2[0];
+  return /*#__PURE__*/_react["default"].createElement(_react["default"].Fragment, null, /*#__PURE__*/_react["default"].createElement("div", null, /*#__PURE__*/_react["default"].createElement("ul", null, state === null || state === void 0 ? void 0 : (_state$data = state.data) === null || _state$data === void 0 ? void 0 : _state$data.map(function (item) {
+    return /*#__PURE__*/_react["default"].createElement("li", {
+      key: item.id
+    }, item.email);
+  })), /*#__PURE__*/_react["default"].createElement("br", null), /*#__PURE__*/_react["default"].createElement("h1", null, "P2"), /*#__PURE__*/_react["default"].createElement("a", {
+    href: "/production"
+  }, "production")));
 };
-var _default = Router;
+var _default = Home;
 exports["default"] = _default;
 
-},{"../client/modules/Home":42,"../client/modules/Production":43,"@babel/runtime/helpers/interopRequireDefault":4,"react":36,"react-router-dom":27}],45:[function(require,module,exports){
+},{"../../../../shared/hooks/useInitState":46,"@babel/runtime/helpers/interopRequireDefault":4,"@babel/runtime/helpers/slicedToArray":7,"react":36,"react-helmet":23}],46:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -42459,6 +42520,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 var InitStateContext = /*#__PURE__*/_react["default"].createContext({
   name: "",
   page: "",
+  // home or pro
   message: "",
   list: [],
   // 页面特定的 每个页面都不一样

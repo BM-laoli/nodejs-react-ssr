@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 
 const InitStateContext = React.createContext({
   name: "",
-  page: "",
+  page: "", // home or pro
   message: "",
   list: [],
   // 页面特定的 每个页面都不一样

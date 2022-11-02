@@ -8,8 +8,12 @@ exports.render = void 0;
 var _react = _interopRequireWildcard(require("react"));
 var _server = require("react-dom/server");
 var _server2 = require("react-router-dom/server");
-var _Router = _interopRequireDefault(require("../shared/Router"));
+var _reactRouterDom = require("react-router-dom");
 var _useInitState = require("../shared/hooks/useInitState");
+var _P = _interopRequireDefault(require("../client/modules/Production/page/P1"));
+var _P2 = _interopRequireDefault(require("../client/modules/Production/page/P2"));
+var _Hom = _interopRequireDefault(require("../client/modules/Home/page/Hom1"));
+var _Hom2 = _interopRequireDefault(require("../client/modules/Home/page/Hom2"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -19,6 +23,28 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+var PRouter = function PRouter(props) {
+  return /*#__PURE__*/_react["default"].createElement(_reactRouterDom.Routes, {
+    basename: props.basename
+  }, /*#__PURE__*/_react["default"].createElement(_reactRouterDom.Route, {
+    path: "/",
+    element: /*#__PURE__*/_react["default"].createElement(_P["default"], null)
+  }), /*#__PURE__*/_react["default"].createElement(_reactRouterDom.Route, {
+    path: "/pro/p2",
+    element: /*#__PURE__*/_react["default"].createElement(_P2["default"], null)
+  }));
+};
+var HRouter = function HRouter(props) {
+  return /*#__PURE__*/_react["default"].createElement(_reactRouterDom.Routes, {
+    basename: props.basename
+  }, /*#__PURE__*/_react["default"].createElement(_reactRouterDom.Route, {
+    path: "/",
+    element: /*#__PURE__*/_react["default"].createElement(_Hom["default"], null)
+  }), /*#__PURE__*/_react["default"].createElement(_reactRouterDom.Route, {
+    path: "/home/h2",
+    element: /*#__PURE__*/_react["default"].createElement(_Hom2["default"], null)
+  }));
+};
 var App = function App(props) {
   var _useReducer = (0, _react.useReducer)(_useInitState.reducer, props.data),
     _useReducer2 = _slicedToArray(_useReducer, 2),
@@ -26,9 +52,16 @@ var App = function App(props) {
     dispatch = _useReducer2[1];
   return /*#__PURE__*/_react["default"].createElement(_useInitState.InitStateContext.Provider, {
     value: [state, dispatch]
-  }, /*#__PURE__*/_react["default"].createElement(_server2.StaticRouter, null, /*#__PURE__*/_react["default"].createElement(_Router["default"], null)));
+  }, /*#__PURE__*/_react["default"].createElement(_server2.StaticRouter, {
+    location: props.path
+  }, state.page === "home" && /*#__PURE__*/_react["default"].createElement(HRouter, {
+    basename: state.basename
+  }), state.page === "pro" && /*#__PURE__*/_react["default"].createElement(PRouter, {
+    basename: state.basename
+  })));
 };
-var render = function render(path, data, components) {
+var render = function render(path, data) {
+  console.log("path", path);
   return (0, _server.renderToString)( /*#__PURE__*/_react["default"].createElement(App, {
     data: data,
     path: path

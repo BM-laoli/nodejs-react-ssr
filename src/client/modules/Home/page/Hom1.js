@@ -1,26 +1,25 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { useInitState } from "../../../shared/hooks/useInitState";
+import { useInitState } from "../../../../shared/hooks/useInitState";
 import { Helmet } from "react-helmet";
+import { Link } from "react-router-dom";
 
-const Production = (props) => {
+const Home = (props) => {
   const [state] = useInitState();
 
   return (
     <>
       <div>
-        <h1> 产品</h1>
-        <br></br>
-        <Link to="/"> 首页 </Link>
-        <br />
         <ul>
           {state?.data?.map((item) => {
             return <li key={item.id}>{item.email}</li>;
           })}
         </ul>
+        <br></br>
+        <h1>Hom1</h1>
+        <Link to="/home/h2">前往H2x</Link>
       </div>
     </>
   );
 };
 
-export default Production;
+export default Home;

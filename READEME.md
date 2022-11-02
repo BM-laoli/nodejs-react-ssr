@@ -174,6 +174,14 @@ const render = (path, data) => {
 
 > 有鉴于此 我们考虑了两种处理方案
 
+### 建立 层级
+
+在client 上，我们使用 不同的层级处理
+
+比如 /home 下的路由 包括子路由全部给home 处理，然后在 加上 basename 进行处理, 这样处理的话，意味着我们 对 client 的router 拆分更详细的模块, 建立多个 hydrate bundle 和 ssr render
+
+至于闪动 我们需要想法子 加上loading 处理，对于page 直接的跳转也需要分两种 module 内 和module 外
+
 ### 全部Page 同构直出
 
 > 我们决定全 对于所有的页面的路由控制交给server 处理，不做路由同构 ，这样可以把不同的module 弄的 比较独立
@@ -184,14 +192,6 @@ dispatch 改动的地方
 // 去client/index.js， 干掉路由， 经由 注水的state 去渲染指定的page
 
 ```
-
-### 建立 层级
-
-在client 上，我们使用 不同的层级处理
-
-比如 /home 下的路由 包括子路由全部给home 处理，然后在 加上 basename 进行处理, 这样处理的话，意味着我们 对 client 的router 拆分更详细的模块, 建立多个 hydrate bundle 和 ssr render
-
-至于闪动 我们需要想法子 加上loading 处理，对于page 直接的跳转也需要分两种 module 内 和module 外
 
 要解决这个问题需要像下面的这样处理
 3. 注水&脱水

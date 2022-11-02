@@ -1,6 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { useInitState } from "../../../shared/hooks/useInitState";
+import { useInitState } from "../../../../shared/hooks/useInitState";
 import { Helmet } from "react-helmet";
 
 const Home = (props) => {
@@ -15,8 +14,8 @@ const Home = (props) => {
           })}
         </ul>
         <br></br>
-        <h1>我是首页</h1>
-        <a href="/production">production</a>
+        <h1>Hom2</h1>
+        <a href="/pro/">pro</a>
       </div>
     </>
   );
