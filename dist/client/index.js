@@ -3,7 +3,6 @@
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 var _react = _interopRequireWildcard(require("react"));
 var _reactDom = _interopRequireDefault(require("react-dom"));
-var _reactRouterDom = require("react-router-dom");
 var _useInitState = require("../shared/hooks/useInitState");
 var _Router = require("../shared/Router");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
@@ -24,14 +23,12 @@ var App = function App() {
     _useReducer2 = _slicedToArray(_useReducer, 2),
     state = _useReducer2[0],
     dispatch = _useReducer2[1];
-  return /*#__PURE__*/_react["default"].createElement(_reactRouterDom.BrowserRouter, {
-    basename: state.page
-  }, /*#__PURE__*/_react["default"].createElement(_useInitState.InitStateContext.Provider, {
+  var Component = (0, _react.useMemo)(function () {
+    var CH = _Router.Router[state.page] || /*#__PURE__*/_react["default"].createElement(_react["default"].Fragment, null);
+    return /*#__PURE__*/_react["default"].createElement(CH, null);
+  }, []);
+  return /*#__PURE__*/_react["default"].createElement(_useInitState.InitStateContext.Provider, {
     value: [state, dispatch]
-  }, state.page === "home" && /*#__PURE__*/_react["default"].createElement(_Router.HRouter, {
-    basename: state.basename
-  }), state.page === "pro" && /*#__PURE__*/_react["default"].createElement(_Router.PRouter, {
-    basename: state.basename
-  })));
+  }, Component);
 };
 _reactDom["default"].hydrate( /*#__PURE__*/_react["default"].createElement(App, null), document.getElementById("root"));

@@ -1,6 +1,7 @@
 import React from "react";
-import { useInitState } from "../../../../shared/hooks/useInitState";
+import { useInitState } from "../../../shared/hooks/useInitState";
 import { Helmet } from "react-helmet";
+import Link from '../../components/Link'
 
 const Home = (props) => {
   const [state] = useInitState();
@@ -14,8 +15,8 @@ const Home = (props) => {
           })}
         </ul>
         <br></br>
-        <h1>P1</h1>
-        <a href="/pro/p2">production</a>
+        <h1>Hom1</h1>
+        <Link to="/home2">Go h2</Link>
       </div>
     </>
   );

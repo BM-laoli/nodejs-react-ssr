@@ -7,10 +7,10 @@ Object.defineProperty(exports, "__esModule", {
 exports.render = void 0;
 var _react = _interopRequireWildcard(require("react"));
 var _server = require("react-dom/server");
-var _server2 = require("react-router-dom/server");
-var _reactRouterDom = require("react-router-dom");
 var _useInitState = require("../shared/hooks/useInitState");
 var _Router = require("../shared/Router");
+var _reactHelmet = _interopRequireDefault(require("react-helmet"));
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
@@ -24,18 +24,17 @@ var App = function App(props) {
     _useReducer2 = _slicedToArray(_useReducer, 2),
     state = _useReducer2[0],
     dispatch = _useReducer2[1];
+  var Component = (0, _react.useMemo)(function () {
+    var CH = _Router.Router[state.page] || function () {
+      return /*#__PURE__*/_react["default"].createElement(_react["default"].Fragment, null);
+    };
+    return /*#__PURE__*/_react["default"].createElement(CH, null);
+  }, []);
   return /*#__PURE__*/_react["default"].createElement(_useInitState.InitStateContext.Provider, {
     value: [state, dispatch]
-  }, /*#__PURE__*/_react["default"].createElement(_server2.StaticRouter, {
-    location: props.path
-  }, state.basename === "home" && /*#__PURE__*/_react["default"].createElement(_Router.HRouter, {
-    basename: state.basename
-  }), state.basename === "pro" && /*#__PURE__*/_react["default"].createElement(_Router.PRouter, {
-    basename: state.basename
-  })));
+  }, Component);
 };
 var render = function render(path, data) {
-  console.log("path--->", path);
   return (0, _server.renderToString)( /*#__PURE__*/_react["default"].createElement(App, {
     data: data,
     path: path

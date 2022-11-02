@@ -1,7 +1,8 @@
 import React from "react";
-import { useInitState } from "../../../../shared/hooks/useInitState";
+import { useInitState } from "../../../shared/hooks/useInitState";
 import { Helmet } from "react-helmet";
-import { Link } from "react-router-dom";
+import Link from '../../components/Link'
+
 
 const Home = (props) => {
   const [state] = useInitState();
@@ -15,8 +16,8 @@ const Home = (props) => {
           })}
         </ul>
         <br></br>
-        <h1>Hom1</h1>
-        <Link to="/home/h2">前往H2x</Link>
+        <h1>Hom2</h1>
+        <Link to="/p/p1">Go p1</Link>
       </div>
     </>
   );

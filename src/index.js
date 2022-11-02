@@ -1,9 +1,6 @@
-import axios from "axios";
-import { kMaxLength } from "buffer";
-import express from "express";
 import React from "react";
-const ejs = require("ejs");
-const { join } = require("path");
+import axios from "axios";
+import express from "express";
 const { createProxyMiddleware } = require("http-proxy-middleware");
 import { render } from "./server";
 
@@ -19,37 +16,55 @@ app.use(
   })
 );
 
-const htmlTLP = (reactContentStream, data) => ` 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title></title>
-</head>
-<body>
-  <div id="root"> ${reactContentStream} </div>
-  <!-- 注水 -->
-  <script>
-  window.__INIT_STATE__ = ${JSON.stringify(data)};
-  </script>
+const injectCssStyle  = () => {
+  // 读取 client fs
+  return  ''
+}
 
-  <!-- 绑定事件 -->
-  <script src="/js/app.js"></script> 
-</body>
-</html>
-`;
+const injectCssLink  = ( links ) => {
+  let temp = '';
+
+  links.forEach( (item ) => {
+      temp += `<link rel="stylesheet" href="${item}"> </link>
+      `
+  } )
+
+  return temp
+};
+
+const htmlTLP = (reactContentStream, data, links ) => ` 
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    ${links || ''}
+    
+  </head>
+  <body>
+    <div id="root"> ${reactContentStream} </div>
+    <!-- 注水 -->
+    <script>
+    window.__INIT_STATE__ = ${JSON.stringify(data)};
+    </script>
+
+    <!-- 绑定事件 -->
+    <script src="/js/app.js"></script> 
+  </body>
+  </html>
+  `;
 
 app.get('/', (req, res) => {
-  res.redirect('/home/')
+  res.redirect('/home')
 });
 
-app.get("/pro/*", async (req, res) => {
+app.get("/p/*", async (req, res) => {
   res.setHeader("Content-Type", "text/html");
   const data = {
     name: "",
-    page: "",
+    page: req.path,
     message: "pro",
     basename: "pro",
     list: [],
@@ -63,15 +78,17 @@ app.get("/pro/*", async (req, res) => {
   };
 
   const reactContentStream = render(req.path, data);
-  // console.log('reactContentStream pro',reactContentStream);
-  res.send(htmlTLP(reactContentStream, data));
+  res.send(htmlTLP(reactContentStream, data, injectCssLink([
+    '/style/home/index.css'
+  ])));
 });
 
-app.get("/home/", async (req, res) => {
+
+app.get("/home", async (req, res) => {
   res.setHeader("Content-Type", "text/html");
   const data = {
     name: "",
-    page: "",
+    page: "/home",
     message: "home",
     basename: "home",
     list: [],
@@ -85,16 +102,15 @@ app.get("/home/", async (req, res) => {
   };
 
   const reactContentStream = render(req.path, data);
-  // console.log('reactContentStream pro',reactContentStream);
   res.send(htmlTLP(reactContentStream, data));
 });
 
-app.get("/home/h2", async (req, res) => {
+app.get("/home2", async (req, res) => {
   res.setHeader("Content-Type", "text/html");
   const value = await axios.get("http://localhost:3030/api/users");
   const data = {
     name: "",
-    page: "home",
+    page: "/home2",
     message: "",
     basename: "home",
     list: [],
@@ -102,7 +118,6 @@ app.get("/home/h2", async (req, res) => {
     data: value.data.data,
   };
   const reactContentStream = render(req.path, data);
-  // console.log("reactContentStream home", reactContentStream);
   res.send(htmlTLP(reactContentStream, data));
 });
 

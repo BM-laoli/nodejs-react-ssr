@@ -2,7 +2,7 @@
 
 > 这是一个非常完全 且完善的SSR 同构方案
 
-# Todo
+## Todo
 
 > 我们需要完成下面的这些事情
 
@@ -15,9 +15,9 @@
 ❎ 部署
 ❎ 压测
 
-# 细节描述
+## 细节描述和踩坑
 
-## 处理jsx ssr 的server 问题
+### 处理jsx ssr 的server 问题
 
 > 实际上就是一个问题：“如何编译一些不合法的js ，如何使用babel 并且能获取它的HRM能力 ”, 我们先使用
 
@@ -131,7 +131,7 @@ exports.dev = series(init , server_build);
 
 ```
 
-## base ssr
+### Base SSR
 
 > 在base ssr 中我们需要完成所有的ssr 相关的事情
 
@@ -141,44 +141,73 @@ exports.dev = series(init , server_build);
 2. 路由管理
 ✅ 完成
 
-> 由于静态路由，如果你像下面这样写 这是不行的会导致 不会被渲染 进入不到 render 函数中 它们全部公用一个state。这回引起两个方面的问题
-a. 一旦东西交给了 浏览器，那么所有的路由操作都在 浏览器了, 不会再经服务器 有ssr的页面了
-b. 路由刷新的时候比如 /production 能够直接ssr 但只能渲染一次，然后就是 浏览器接管路由了
-c. 由于 hydrate 和ssr 在 /production 的行为不一致，会导致 页面的闪动，除非你 全部都是用浏览器路由
-d. 如果你是用 路由的前置拦截 会导致，所有的page 只会在同一个时间获取同一个数据，抵达浏览器之后就不会再 更新了 有问题
+> 由于静态路由，如果你像下面这样写 这是不行的, 会导致 进入不到 server 的 render 函数中  html 只会返回一次，在这个时候 hydrate 的js 会进入到 browser，接管页面的之后的所有操作，至此server 将不在介入交互的其中
+
+a.  **机制** / 或者其他的ssr 返回， 一旦东西交给了 browser，那么所有的路由操作都在 浏览器了, 不会再经服务器 有ssr的页面了， 之后的所有页面都不在是ssr，和csr 一致
+
+b. **路由同构** 路由刷新的时候比如 从 / ->  /production 由于/进入的时候 浏览器接管路，因此不会进入 server 如果要改变 initState 将不可能
+
+c. **闪动** 由于 hydrate 和ssr 在 /production 的行为不一致，会导致 页面的闪动，原因是：ssr 是production 但 hydrate 初始化的一面 不是同一个dom 结构
 
 ```js
-+++1 api
-const reactContentStream = render(req.path, data);
+// browser
+const get_initState = () => {
+  return window.__INIT_STATE__;
+};
 
-+++2 api
-const reactContentStream = render(req.path, data);
+const App = () => {
+  const [state, dispatch] = useReducer(reducer, get_initState());
 
-
-const App = (props) => {
-  const [state, dispatch] = useReducer(reducer, props.data);
   return (
-    <StaticRouter location={props.path}>
+    <BrowserRouter >
       <InitStateContext.Provider value={[state, dispatch]}>
         <Router></Router>
       </InitStateContext.Provider>
-    </StaticRouter>
+    </BrowserRouter>
   );
 };
 
-const render = (path, data) => {
-  console.log("渲染", path);
-  return renderToString(<App path={path} data={data}></App>);
+ReactDom.hydrate(<App></App>, document.getElementById("root"));
+
+// server
+const App = (props) => {
+  const [state, dispatch] = useReducer(reducer, props.data);
+  return (
+    <InitStateContext.Provider value={[state, dispatch]}>
+      <StaticRouter>
+        <Router />
+      </StaticRouter>
+    </InitStateContext.Provider>
+  );
 };
 
-app.use('*', () => {
-  .....
-})
+const render = (path, data, components) => {
+  console.log('render->', path);
+  return renderToString(<App data={data} path={path}></App>);
+};
+
+app.get("*", async (req, res) => {
+  res.setHeader("Content-Type", "text/html");
+  const value = await axios.get("http://localhost:3030/api/users");
+  const data = {
+    name: "",
+    page: "",
+    message: "",
+    list: [],
+    // 页面特定的 每个页面都不一样
+    data: value.data.data,
+  };
+  const reactContentStream = render(req.path, data, Home);
+
+  res.send(htmlTLP(reactContentStream, data));
+});
+
+
 ```
 
-> 有鉴于此 我们考虑了两种处理方案
+> 有鉴于此 ，突然发现 除了 第一次ssr 之外，这个ssr 同构好像有点鸡肋， 我们考虑了两种处理方案 ，1. 要么全部同构直出 ，2. 我们是否可以 做权衡，都要一点点🤏 不过分吧
 
-### 建立 层级
+#### 建立 层级 (  平衡 )
 
 在client 上，我们使用 不同的层级处理
 
@@ -186,32 +215,232 @@ app.use('*', () => {
 
 至于闪动 我们需要想法子 加上loading 处理，对于page 直接的跳转也需要分两种 module 内 和module 外
 
-### 全部Page 同构直出
-
-> 我们决定全 对于所有的页面的路由控制交给server 处理，不做路由同构 ，这样可以把不同的module 弄的 比较独立
-
-dispatch 改动的地方
-
 ```js
-// 去client/index.js， 干掉路由， 经由 注水的state 去渲染指定的page
+// 如果你这样 会有问题
+
+const App = (props) => {
+  const [state, dispatch] = useReducer(reducer, props.data);
+  return (
+    <InitStateContext.Provider value={[state, dispatch]}>
+      <StaticRouter location={props.path}>
+        {state.basename === "home" && <HRouter basename={state.basename}></HRouter>}
+        {state.basename === "pro" && <PRouter basename={state.basename}></PRouter>}
+      </StaticRouter>
+    </InitStateContext.Provider>
+  );
+};
+
+//    <HRouter basename={state.basename}></HRouter>
+
+// 这样会有问题 由于 每次 server 回来，都是动态的  HRouter baserName 判断，会导致browser 中的router  不会生效
+ app.get("/pro/*", async (req, res) => {
+ app.get("/home/*", async (req, res) => {
+
+// 要处理这个问题 就得把他们分多份  比如下面这样子 每个 client 单独搞一个  server 端也单独搞一个
+    <InitStateContext.Provider value={[state, dispatch]}>
+      <StaticRouter location='home'>
+        <HRouter basename={state.basename}></HRouter>
+      </StaticRouter>
+    </InitStateContext.Provider>
+
+// 然后在 server ssr 匹配到 子路径就不要渲染了，避免闪动 代码就不敲了 这是一种方案
 
 ```
 
-要解决这个问题需要像下面的这样处理
+> 做完这些之后  基本能够符合我们的要求了
+
+#### 全部Page 同构直出
+
+> 这个的话 就相对的非常的简单了，仅仅是单纯在server 端传入 你需要的组件就好了，在 client，也是如此 这里简单期间 全部打包 📦，然后 用page 判断 (当然后续要做拆分哈 加载当前页面用到的就好了)
+
+```js
+// router
+import React from 'react';
+import Home1 from '../client/page/Home/Hom1'
+import Home2 from '../client/page/Home/Hom2'
+import P1 from '../client/page/Production/P1'
+import P2 from '../client/page/Production/P2'
+
+const Router = {
+  "/home" : Home1,
+  "/home2" : Home2,
+  "/p/p1" : P1,
+  "/p/p2" : P2,
+};
+
+export  {
+  Router
+}
+
+// client & server 
++++++
+  const Component =  useMemo(() =>{
+    const CH  = Router[state.page]  || <></>
+    return <CH></CH>
+  }, []);
+
+  return (
+      <InitStateContext.Provider value={[state, dispatch]}>
+        { Component }
+      </InitStateContext.Provider>
+  );
+
++++++
+
+// server
+app.get('/', (req, res) => {
+  res.redirect('/home')
+});
+
+app.get("/p/*", async (req, res) => {
+  res.setHeader("Content-Type", "text/html");
+  const data = {
+    name: "",
+    page: req.path,
+    message: "pro",
+    basename: "pro",
+    list: [],
+    // 页面特定的 每个页面都不一样
+    data: [
+      {
+        email: "861795660@qq.com",
+        id: 1,
+      },
+    ],
+  };
+
+  const reactContentStream = render(req.path, data);
+  console.log('reactContentStream pro',reactContentStream);
+  res.send(htmlTLP(reactContentStream, data));
+});
+
+
+app.get("/home", async (req, res) => {
+  res.setHeader("Content-Type", "text/html");
+  const data = {
+    name: "",
+    page: "/home",
+    message: "home",
+    basename: "home",
+    list: [],
+    // 页面特定的 每个页面都不一样
+    data: [
+      {
+        email: "861795660@qq.com",
+        id: 1,
+      },
+    ],
+  };
+
+  const reactContentStream = render(req.path, data);
+  console.log('reactContentStream pro', reactContentStream);
+  res.send(htmlTLP(reactContentStream, data));
+});
+
+app.get("/home2", async (req, res) => {
+  res.setHeader("Content-Type", "text/html");
+  const value = await axios.get("http://localhost:3030/api/users");
+  const data = {
+    name: "",
+    page: "/home2",
+    message: "",
+    basename: "home",
+    list: [],
+    // 页面特定的 每个页面都不一样
+    data: value.data.data,
+  };
+  const reactContentStream = render(req.path, data);
+  console.log("reactContentStream home", reactContentStream);
+  res.send(htmlTLP(reactContentStream, data));
+});
+
+
+```
+  
 3. 注水&脱水
-✅ 完成
+✅ 完成 没有什么需要特别说的
 
 4. 事件绑定和css
-✅ 完成
-CSS 采用直接 在public 下完成，更高级的做法应该是 css 直接inject 到ssr 模版中, 目前使用的是
-react-Helmet, 注入css 的方式注入每个页面所需要的 css
+✅ 这里先按下不表，后续我们要持续优化下去，
+对于这个话题，我选择使用  file 的方式  把 css 直接注入 style 中 ，或者使用link 引入 避免闪动
 
-# Vite babel
+```js
+const injectCssStyle  = () => {
+  // 读取 client fs
+  return  ''
+}
 
-# Code splice
+const injectCssLink  = ( links ) => {
+  let temp = '';
 
-# ts
+  links.forEach( (item ) => {
+      temp += `<link rel="stylesheet" href="${item}"> </link>
+      `
+  } )
 
-# 部署
+  return temp
+};
 
-# 压测
+
+const htmlTLP = (reactContentStream, data, links ) => ` 
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    ${links || ''}
+    
+  </head>
+  <body>
+    <div id="root"> ${reactContentStream} </div>
+    <!-- 注水 -->
+    <script>
+    window.__INIT_STATE__ = ${JSON.stringify(data)};
+    </script>
+
+    <!-- 绑定事件 -->
+    <script src="/js/app.js"></script> 
+  </body>
+  </html>
+  `;
+
+  app.get("/p/*", async (req, res) => {
+  res.setHeader("Content-Type", "text/html");
+  const data = {
+    name: "",
+    page: req.path,
+    message: "pro",
+    basename: "pro",
+    list: [],
+    // 页面特定的 每个页面都不一样
+    data: [
+      {
+        email: "861795660@qq.com",
+        id: 1,
+      },
+    ],
+  };
+
+  const reactContentStream = render(req.path, data);
+  console.log('reactContentStream pro',reactContentStream);
+  res.send(htmlTLP(reactContentStream, data, injectCssLink([
+    '/style/home/index.css'
+  ])));
+});
+```
+
+## Vite babel
+
+> 好，经过上述倒腾之后 大部分东西是没有问题的
+
+### 优化绑定CSS
+
+## Code splice
+
+## ts
+
+## 部署
+
+## 压测

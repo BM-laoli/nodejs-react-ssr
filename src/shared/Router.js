@@ -1,28 +1,16 @@
 import React from 'react';
-import P1 from "../client/modules/Production/page/P1";
-import P2 from "../client/modules/Production/page/P2";
-import H1 from "../client/modules/Home/page/Hom1";
-import H2 from "../client/modules/Home/page/Hom2";
-import {  Route, Routes } from "react-router-dom";
+import Home1 from '../client/page/Home/Hom1'
+import Home2 from '../client/page/Home/Hom2'
+import P1 from '../client/page/Production/P1'
+import P2 from '../client/page/Production/P2'
 
-const PRouter = (props) => {
-  return (
-    <Routes basename={props.basename}>
-      <Route path="/pro/" element={<P1 />} />
-      <Route path="/pro/p2" element={<P2 />} />
-    </Routes>
-  );
-};
-const HRouter = (props) => {
-  return (
-    <Routes basename={props.basename}>
-      <Route path="/home/" element={<H1 />} />
-      <Route path="/home/h2" element={<H2 />} />
-    </Routes>
-  );
+const Router = {
+  "/home" : Home1,
+  "/home2" : Home2,
+  "/p/p1" : P1,
+  "/p/p2" : P2,
 };
 
-export {
-  PRouter,
-  HRouter
+export  {
+  Router
 }

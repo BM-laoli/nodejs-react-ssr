@@ -75,7 +75,7 @@ const init = (done) => {
 
 // dev server & client
 const server_build = (done) => {
-  const watcher = watch(["./src/**/*.js"]);
+  const watcher = watch(["./src/**/*.js", "./src/**/*.jsx"]);
   watcher.on("change", () => {
     console.log("update file...");
     series(clean, _script, _scriptServer, startServer)()

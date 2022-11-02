@@ -1,9 +1,7 @@
-import React, { useReducer, useEffect } from "react";
+import React, { useReducer, useMemo } from "react";
 import ReactDom from "react-dom";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-
 import { reducer, InitStateContext } from "../shared/hooks/useInitState";
-import { HRouter, PRouter } from '../shared/Router';
+import { Router } from '../shared/Router'
 
 // 脱水
 const get_initState = () => {
@@ -12,14 +10,16 @@ const get_initState = () => {
 
 const App = () => {
   const [state, dispatch] = useReducer(reducer, get_initState());
+  
+  const Component =  useMemo(() =>{
+    const CH  = Router[state.page]  || <></>
+    return <CH></CH>
+  }, []);
 
   return (
-    <BrowserRouter basename={state.page}>
       <InitStateContext.Provider value={[state, dispatch]}>
-        {state.page === "home" && <HRouter basename={state.basename}></HRouter>}
-        {state.page === "pro" && <PRouter basename={state.basename}></PRouter>}
+        { Component }
       </InitStateContext.Provider>
-    </BrowserRouter>
   );
 };
 

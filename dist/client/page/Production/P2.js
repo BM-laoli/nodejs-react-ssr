@@ -5,9 +5,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports["default"] = void 0;
 var _react = _interopRequireDefault(require("react"));
-var _useInitState3 = require("../../../../shared/hooks/useInitState");
+var _useInitState3 = require("../../../shared/hooks/useInitState");
 var _reactHelmet = require("react-helmet");
-var _reactRouterDom = require("react-router-dom");
+var _Link = _interopRequireDefault(require("../../components/Link"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -24,9 +24,9 @@ var Home = function Home(props) {
     return /*#__PURE__*/_react["default"].createElement("li", {
       key: item.id
     }, item.email);
-  })), /*#__PURE__*/_react["default"].createElement("br", null), /*#__PURE__*/_react["default"].createElement("h1", null, "Hom1"), /*#__PURE__*/_react["default"].createElement(_reactRouterDom.Link, {
-    to: "/home/h2"
-  }, "\u524D\u5F80H2x")));
+  })), /*#__PURE__*/_react["default"].createElement("br", null), /*#__PURE__*/_react["default"].createElement("h1", null, "P2"), /*#__PURE__*/_react["default"].createElement(_Link["default"], {
+    to: "/home"
+  }, "Go home")));
 };
 var _default = Home;
 exports["default"] = _default;

@@ -1,24 +1,25 @@
-import React, { useReducer } from "react";
+import React, { useReducer,  useMemo } from "react";
 import { renderToString } from "react-dom/server";
-import { StaticRouter } from "react-router-dom/server";
-import { Routes, Route } from "react-router-dom";
-
 import { reducer, InitStateContext } from "../shared/hooks/useInitState";
-import { HRouter, PRouter } from '../shared/Router'
+import { Router } from '../shared/Router'
+import Helmet from 'react-helmet'
+
 const App = (props) => {
   const [state, dispatch] = useReducer(reducer, props.data);
+  
+  const Component =  useMemo(() =>{
+    const CH  = Router[state.page]  || (() => <></>)
+    return <CH></CH>
+  }, []);
+
   return (
     <InitStateContext.Provider value={[state, dispatch]}>
-      <StaticRouter location={props.path}>
-        {state.basename === "home" && <HRouter basename={state.basename}></HRouter>}
-        {state.basename === "pro" && <PRouter basename={state.basename}></PRouter>}
-      </StaticRouter>
+      { Component  }
     </InitStateContext.Provider>
   );
 };
 
-const render = (path, data) => {
-  console.log("path--->", path);
+const render = (path, data ) => {
   return renderToString(<App data={data} path={path}></App>);
 };
 
