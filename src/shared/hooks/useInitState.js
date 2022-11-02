@@ -1,44 +1,33 @@
-import React, { useContext} from "react";
+import React, { useContext } from "react";
 
 const InitStateContext = React.createContext({
-  name:"",
-  page:"",
-  message:'',
-  list: '',
+  name: "",
+  page: "",
+  message: "",
+  list: [],
   // 页面特定的 每个页面都不一样
-  data: ''
-})
+  data: "",
+});
 
 const reducer = (state, action) => {
-  
   switch (action.type) {
-    case 'changeTheme':
+    case "changeTheme":
       return {
         ...state,
-        ...action.payload
-      }
+        ...action.payload,
+      };
     default:
       return {
         ...state,
-        ...action.payload
-      }
+        ...action.payload,
+      };
   }
-}
-
-
+};
 
 const useInitState = () => {
   const initStateCtx = useContext(InitStateContext);
-  const { state = {}, dispatch = null } = initStateCtx;
+  const [state = {}, dispatch = null] = initStateCtx;
+  return [state, dispatch];
+};
 
-  return {
-    state,
-    dispatch
-  }
-}
-
-export {
-  InitStateContext,
-  useInitState,
-  reducer
-}
+export { InitStateContext, useInitState, reducer };

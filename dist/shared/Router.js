@@ -9,7 +9,7 @@ var _reactRouterDom = require("react-router-dom");
 var _Home = _interopRequireDefault(require("../client/modules/Home"));
 var _Production = _interopRequireDefault(require("../client/modules/Production"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-var _default = function _default() {
+var Router = function Router(props) {
   return /*#__PURE__*/_react["default"].createElement(_reactRouterDom.Routes, null, /*#__PURE__*/_react["default"].createElement(_reactRouterDom.Route, {
     path: "/",
     element: /*#__PURE__*/_react["default"].createElement(_Home["default"], null)
@@ -18,4 +18,5 @@ var _default = function _default() {
     element: /*#__PURE__*/_react["default"].createElement(_Production["default"], null)
   }));
 };
+var _default = Router;
 exports["default"] = _default;
