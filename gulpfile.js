@@ -44,11 +44,6 @@ const _scriptServer = (cb) => {
   );
 };
 
-// cv ejs template
-const moveTemplate = (done) => {
-  execSync('cp -Rf  ./src/index.ejs  ./dist '  )
-  done()
-}
 
 // 启动server
 let isOpen = false;
@@ -74,7 +69,7 @@ const startServer = () => {
 
 // 初始化
 const init = (done) => {
-  series(clean, _script, _scriptServer, moveTemplate, startServer)()
+  series(clean, _script, _scriptServer, startServer)()
   done()
 }
 
@@ -83,7 +78,7 @@ const server_build = (done) => {
   const watcher = watch(["./src/**/*.js"]);
   watcher.on("change", () => {
     console.log("update file...");
-    series(clean, _script, _scriptServer, moveTemplate, startServer)()
+    series(clean, _script, _scriptServer, startServer)()
   });
   done();
 };

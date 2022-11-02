@@ -170,6 +170,10 @@ const render = (path, data) => {
   console.log("渲染", path);
   return renderToString(<App path={path} data={data}></App>);
 };
+
+app.use('*', () => {
+  .....
+})
 ```
 
 > 有鉴于此 我们考虑了两种处理方案

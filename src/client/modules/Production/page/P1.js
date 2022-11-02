@@ -15,7 +15,7 @@ const Home = (props) => {
         </ul>
         <br></br>
         <h1>P1</h1>
-        <a href="/production">production</a>
+        <a href="/pro/p2">production</a>
       </div>
     </>
   );

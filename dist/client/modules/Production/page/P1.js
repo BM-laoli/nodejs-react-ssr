@@ -24,7 +24,7 @@ var Home = function Home(props) {
       key: item.id
     }, item.email);
   })), /*#__PURE__*/_react["default"].createElement("br", null), /*#__PURE__*/_react["default"].createElement("h1", null, "P1"), /*#__PURE__*/_react["default"].createElement("a", {
-    href: "/production"
+    href: "/pro/p2"
   }, "production")));
 };
 var _default = Home;

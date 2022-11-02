@@ -23,8 +23,11 @@ app.use("/api", createProxyMiddleware({
   secure: false
 }));
 var htmlTLP = function htmlTLP(reactContentStream, data) {
-  return " \n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title></title>\n</head>\n<body>\n  <div id=\"root\"> ".concat(reactContentStream, " </div>\n  <!-- \u6CE8\u6C34 -->\n  <script>\n  window.__INIT_STATE__ = ").concat(JSON.stringify(data), ";\n  </script>\n\n  <!-- \u7ED1\u5B9A\u4E8B\u4EF6 -->\n  <script src=\"/js/app.js\"></script>\n</body>\n</html>\n");
+  return " \n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title></title>\n</head>\n<body>\n  <div id=\"root\"> ".concat(reactContentStream, " </div>\n  <!-- \u6CE8\u6C34 -->\n  <script>\n  window.__INIT_STATE__ = ").concat(JSON.stringify(data), ";\n  </script>\n\n  <!-- \u7ED1\u5B9A\u4E8B\u4EF6 -->\n  <script src=\"/js/app.js\"></script> \n</body>\n</html>\n");
 };
+app.get('/', function (req, res) {
+  res.redirect('/home/');
+});
 app.get("/pro/*", /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(req, res) {
     var data, reactContentStream;
@@ -45,7 +48,7 @@ app.get("/pro/*", /*#__PURE__*/function () {
                 id: 1
               }]
             };
-            reactContentStream = (0, _server.render)(req.path, data);
+            reactContentStream = (0, _server.render)(req.path, data); // console.log('reactContentStream pro',reactContentStream);
             res.send(htmlTLP(reactContentStream, data));
           case 4:
           case "end":
@@ -58,18 +61,51 @@ app.get("/pro/*", /*#__PURE__*/function () {
     return _ref.apply(this, arguments);
   };
 }());
-app.get("/home/*", /*#__PURE__*/function () {
+app.get("/home/", /*#__PURE__*/function () {
   var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(req, res) {
-    var value, data, reactContentStream;
+    var data, reactContentStream;
     return _regeneratorRuntime().wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
             res.setHeader("Content-Type", "text/html");
-            _context2.next = 3;
+            data = {
+              name: "",
+              page: "",
+              message: "home",
+              basename: "home",
+              list: [],
+              // 页面特定的 每个页面都不一样
+              data: [{
+                email: "861795660@qq.com",
+                id: 1
+              }]
+            };
+            reactContentStream = (0, _server.render)(req.path, data); // console.log('reactContentStream pro',reactContentStream);
+            res.send(htmlTLP(reactContentStream, data));
+          case 4:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2);
+  }));
+  return function (_x3, _x4) {
+    return _ref2.apply(this, arguments);
+  };
+}());
+app.get("/home/h2", /*#__PURE__*/function () {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(req, res) {
+    var value, data, reactContentStream;
+    return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            res.setHeader("Content-Type", "text/html");
+            _context3.next = 3;
             return _axios["default"].get("http://localhost:3030/api/users");
           case 3:
-            value = _context2.sent;
+            value = _context3.sent;
             data = {
               name: "",
               page: "home",
@@ -79,18 +115,17 @@ app.get("/home/*", /*#__PURE__*/function () {
               // 页面特定的 每个页面都不一样
               data: value.data.data
             };
-            reactContentStream = (0, _server.render)(req.path, data);
-            console.log("reactContentStream", reactContentStream);
+            reactContentStream = (0, _server.render)(req.path, data); // console.log("reactContentStream home", reactContentStream);
             res.send(htmlTLP(reactContentStream, data));
-          case 8:
+          case 7:
           case "end":
-            return _context2.stop();
+            return _context3.stop();
         }
       }
-    }, _callee2);
+    }, _callee3);
   }));
-  return function (_x3, _x4) {
-    return _ref2.apply(this, arguments);
+  return function (_x5, _x6) {
+    return _ref3.apply(this, arguments);
   };
 }());
 app.listen(3030);

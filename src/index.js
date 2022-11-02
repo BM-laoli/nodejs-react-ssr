@@ -36,10 +36,14 @@ const htmlTLP = (reactContentStream, data) => `
   </script>
 
   <!-- 绑定事件 -->
-  <script src="/js/app.js"></script>
+  <script src="/js/app.js"></script> 
 </body>
 </html>
 `;
+
+app.get('/', (req, res) => {
+  res.redirect('/home/')
+});
 
 app.get("/pro/*", async (req, res) => {
   res.setHeader("Content-Type", "text/html");
@@ -59,11 +63,33 @@ app.get("/pro/*", async (req, res) => {
   };
 
   const reactContentStream = render(req.path, data);
-
+  // console.log('reactContentStream pro',reactContentStream);
   res.send(htmlTLP(reactContentStream, data));
 });
 
-app.get("/home/*", async (req, res) => {
+app.get("/home/", async (req, res) => {
+  res.setHeader("Content-Type", "text/html");
+  const data = {
+    name: "",
+    page: "",
+    message: "home",
+    basename: "home",
+    list: [],
+    // 页面特定的 每个页面都不一样
+    data: [
+      {
+        email: "861795660@qq.com",
+        id: 1,
+      },
+    ],
+  };
+
+  const reactContentStream = render(req.path, data);
+  // console.log('reactContentStream pro',reactContentStream);
+  res.send(htmlTLP(reactContentStream, data));
+});
+
+app.get("/home/h2", async (req, res) => {
   res.setHeader("Content-Type", "text/html");
   const value = await axios.get("http://localhost:3030/api/users");
   const data = {
@@ -76,7 +102,7 @@ app.get("/home/*", async (req, res) => {
     data: value.data.data,
   };
   const reactContentStream = render(req.path, data);
-  console.log("reactContentStream", reactContentStream);
+  // console.log("reactContentStream home", reactContentStream);
   res.send(htmlTLP(reactContentStream, data));
 });
 

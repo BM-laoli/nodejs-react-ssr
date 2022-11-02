@@ -42338,35 +42338,9 @@ var _react = _interopRequireWildcard(require("react"));
 var _reactDom = _interopRequireDefault(require("react-dom"));
 var _reactRouterDom = require("react-router-dom");
 var _useInitState = require("../shared/hooks/useInitState");
-var _P = _interopRequireDefault(require("./modules/Production/page/P1"));
-var _P2 = _interopRequireDefault(require("./modules/Production/page/P2"));
-var _Hom = _interopRequireDefault(require("./modules/Home/page/Hom1"));
-var _Hom2 = _interopRequireDefault(require("./modules/Home/page/Hom2"));
+var _Router = require("../shared/Router");
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-var PRouter = function PRouter(props) {
-  return /*#__PURE__*/_react["default"].createElement(_reactRouterDom.Routes, {
-    basename: props.basename
-  }, /*#__PURE__*/_react["default"].createElement(_reactRouterDom.Route, {
-    path: "/",
-    element: /*#__PURE__*/_react["default"].createElement(_P["default"], null)
-  }), /*#__PURE__*/_react["default"].createElement(_reactRouterDom.Route, {
-    path: "/pro/p2",
-    element: /*#__PURE__*/_react["default"].createElement(_P2["default"], null)
-  }));
-};
-var HRouter = function HRouter(props) {
-  return /*#__PURE__*/_react["default"].createElement(_reactRouterDom.Routes, {
-    basename: props.basename
-  }, /*#__PURE__*/_react["default"].createElement(_reactRouterDom.Route, {
-    path: "/",
-    element: /*#__PURE__*/_react["default"].createElement(_Hom["default"], null)
-  }), /*#__PURE__*/_react["default"].createElement(_reactRouterDom.Route, {
-    path: "home/h2",
-    element: /*#__PURE__*/_react["default"].createElement(_Hom2["default"], null)
-  }));
-};
-
 // 脱水
 var get_initState = function get_initState() {
   return window.__INIT_STATE__;
@@ -42380,15 +42354,15 @@ var App = function App() {
     basename: state.page
   }, /*#__PURE__*/_react["default"].createElement(_useInitState.InitStateContext.Provider, {
     value: [state, dispatch]
-  }, state.page === "home" && /*#__PURE__*/_react["default"].createElement(HRouter, {
+  }, state.page === "home" && /*#__PURE__*/_react["default"].createElement(_Router.HRouter, {
     basename: state.basename
-  }), state.page === "pro" && /*#__PURE__*/_react["default"].createElement(PRouter, {
+  }), state.page === "pro" && /*#__PURE__*/_react["default"].createElement(_Router.PRouter, {
     basename: state.basename
   })));
 };
 _reactDom["default"].hydrate( /*#__PURE__*/_react["default"].createElement(App, null), document.getElementById("root"));
 
-},{"../shared/hooks/useInitState":46,"./modules/Home/page/Hom1":42,"./modules/Home/page/Hom2":43,"./modules/Production/page/P1":44,"./modules/Production/page/P2":45,"@babel/runtime/helpers/interopRequireDefault":4,"@babel/runtime/helpers/slicedToArray":7,"@babel/runtime/helpers/typeof":8,"react":36,"react-dom":21,"react-router-dom":27}],42:[function(require,module,exports){
+},{"../shared/Router":46,"../shared/hooks/useInitState":47,"@babel/runtime/helpers/interopRequireDefault":4,"@babel/runtime/helpers/slicedToArray":7,"@babel/runtime/helpers/typeof":8,"react":36,"react-dom":21,"react-router-dom":27}],42:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -42417,7 +42391,7 @@ var Home = function Home(props) {
 var _default = Home;
 exports["default"] = _default;
 
-},{"../../../../shared/hooks/useInitState":46,"@babel/runtime/helpers/interopRequireDefault":4,"@babel/runtime/helpers/slicedToArray":7,"react":36,"react-helmet":23,"react-router-dom":27}],43:[function(require,module,exports){
+},{"../../../../shared/hooks/useInitState":47,"@babel/runtime/helpers/interopRequireDefault":4,"@babel/runtime/helpers/slicedToArray":7,"react":36,"react-helmet":23,"react-router-dom":27}],43:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -42445,7 +42419,7 @@ var Home = function Home(props) {
 var _default = Home;
 exports["default"] = _default;
 
-},{"../../../../shared/hooks/useInitState":46,"@babel/runtime/helpers/interopRequireDefault":4,"@babel/runtime/helpers/slicedToArray":7,"react":36,"react-helmet":23}],44:[function(require,module,exports){
+},{"../../../../shared/hooks/useInitState":47,"@babel/runtime/helpers/interopRequireDefault":4,"@babel/runtime/helpers/slicedToArray":7,"react":36,"react-helmet":23}],44:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -42467,13 +42441,13 @@ var Home = function Home(props) {
       key: item.id
     }, item.email);
   })), /*#__PURE__*/_react["default"].createElement("br", null), /*#__PURE__*/_react["default"].createElement("h1", null, "P1"), /*#__PURE__*/_react["default"].createElement("a", {
-    href: "/production"
+    href: "/pro/p2"
   }, "production")));
 };
 var _default = Home;
 exports["default"] = _default;
 
-},{"../../../../shared/hooks/useInitState":46,"@babel/runtime/helpers/interopRequireDefault":4,"@babel/runtime/helpers/slicedToArray":7,"react":36,"react-helmet":23}],45:[function(require,module,exports){
+},{"../../../../shared/hooks/useInitState":47,"@babel/runtime/helpers/interopRequireDefault":4,"@babel/runtime/helpers/slicedToArray":7,"react":36,"react-helmet":23}],45:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -42495,13 +42469,52 @@ var Home = function Home(props) {
       key: item.id
     }, item.email);
   })), /*#__PURE__*/_react["default"].createElement("br", null), /*#__PURE__*/_react["default"].createElement("h1", null, "P2"), /*#__PURE__*/_react["default"].createElement("a", {
-    href: "/production"
+    href: "/home/h2"
   }, "production")));
 };
 var _default = Home;
 exports["default"] = _default;
 
-},{"../../../../shared/hooks/useInitState":46,"@babel/runtime/helpers/interopRequireDefault":4,"@babel/runtime/helpers/slicedToArray":7,"react":36,"react-helmet":23}],46:[function(require,module,exports){
+},{"../../../../shared/hooks/useInitState":47,"@babel/runtime/helpers/interopRequireDefault":4,"@babel/runtime/helpers/slicedToArray":7,"react":36,"react-helmet":23}],46:[function(require,module,exports){
+"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.PRouter = exports.HRouter = void 0;
+var _react = _interopRequireDefault(require("react"));
+var _P = _interopRequireDefault(require("../client/modules/Production/page/P1"));
+var _P2 = _interopRequireDefault(require("../client/modules/Production/page/P2"));
+var _Hom = _interopRequireDefault(require("../client/modules/Home/page/Hom1"));
+var _Hom2 = _interopRequireDefault(require("../client/modules/Home/page/Hom2"));
+var _reactRouterDom = require("react-router-dom");
+var PRouter = function PRouter(props) {
+  return /*#__PURE__*/_react["default"].createElement(_reactRouterDom.Routes, {
+    basename: props.basename
+  }, /*#__PURE__*/_react["default"].createElement(_reactRouterDom.Route, {
+    path: "/pro/",
+    element: /*#__PURE__*/_react["default"].createElement(_P["default"], null)
+  }), /*#__PURE__*/_react["default"].createElement(_reactRouterDom.Route, {
+    path: "/pro/p2",
+    element: /*#__PURE__*/_react["default"].createElement(_P2["default"], null)
+  }));
+};
+exports.PRouter = PRouter;
+var HRouter = function HRouter(props) {
+  return /*#__PURE__*/_react["default"].createElement(_reactRouterDom.Routes, {
+    basename: props.basename
+  }, /*#__PURE__*/_react["default"].createElement(_reactRouterDom.Route, {
+    path: "/home/",
+    element: /*#__PURE__*/_react["default"].createElement(_Hom["default"], null)
+  }), /*#__PURE__*/_react["default"].createElement(_reactRouterDom.Route, {
+    path: "/home/h2",
+    element: /*#__PURE__*/_react["default"].createElement(_Hom2["default"], null)
+  }));
+};
+exports.HRouter = HRouter;
+
+},{"../client/modules/Home/page/Hom1":42,"../client/modules/Home/page/Hom2":43,"../client/modules/Production/page/P1":44,"../client/modules/Production/page/P2":45,"@babel/runtime/helpers/interopRequireDefault":4,"react":36,"react-router-dom":27}],47:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
