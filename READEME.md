@@ -6,12 +6,12 @@
 
 > 我们需要完成下面的这些事情
 
-❎ simple babel+gulp compile 工程化
-❎ base SSR
-❎ Vite babel -> es 和 jsx
-❎ code splice
-❎ ts
-❎ 关于缓存
+✅ simple babel+gulp compile 工程化
+✅ base SSR
+✅ Vite babel -> es 和 jsx
+✅ code splice - eslint peitter
+✅ ts
+✅ 关于缓存
 ❎ 部署
 ❎ 压测
 
@@ -205,7 +205,7 @@ app.get("*", async (req, res) => {
 
 ```
 
-> 有鉴于此 ，突然发现 除了 第一次ssr 之外，这个ssr 同构好像有点鸡肋， 我们考虑了两种处理方案 ，1. 要么全部同构直出 ，2. 我们是否可以 做权衡，都要一点点🤏 不过分吧
+> 有鉴于此 ，突然发现 除了 第一次ssr 之外，这个ssr 同构好像有点鸡肋， 我们考虑了两种处理方案 ，1. 要么全部同构直出 ，2. 我们是否可以 做权衡，都要一点点🤏 不过分吧, 3. 最优解：如果需要你可以在判断路由的match
 
 #### 建立 层级 (  平衡 )
 
@@ -431,16 +431,38 @@ const htmlTLP = (reactContentStream, data, links ) => `
 });
 ```
 
+> 好，经过上述倒腾之后 大部分东西是没有问题的, 总体而言就是两类 要么全部同构，要么部分同构，接下来我们使用vite 改造一下上面的东西
+
 ## Vite babel
 
-> 好，经过上述倒腾之后 大部分东西是没有问题的
+> 这里开始我们使用vite 来处理所有工程化的东西，包括原来的gulp 构建流程，在vite 中一个 plugin 几乎完全符合我们的要求
 
-### 优化绑定CSS
+[vite-plugin-ssr](vite-plugin-ssr)
 
-## Code splice
+> 我们把code 全部干掉，直接换成它的就好了，如果希望有layout的想过就做几个layout的component 就好了
 
-## ts
+> 在上述的这个插件中把 下面的东西全部都做了, 且依据文档来看
+> 所有的逻辑都具备 比如公共PageLayout的逻辑也给你杭盖了，非常全
+
+✅ code splice
+✅ ts
+✅ scss
+✅ 关于缓存和预构建
 
 ## 部署
 
-## 压测
+> 部署很简单，直接build 就好了，然后丢到nodejs 平台上运行，当然你也可以放到容器中去run 都没问题
+
+## 压力测试
+
+> 经过测试 目前无任何防护  测试基准如下
+
+```shell
+ab -c200 -n1600 http://127.0.0.1:3000/ 
+```
+
+MacBook2019
+I5 2.2 GHz 六核Intel Core i7
+16GB
+
+稳定在500 上下
