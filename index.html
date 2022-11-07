@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      <!--ssr-title-->
+    </title>
+  </head>
+  <body>
+    <!-- vie 站位 👇 ssr-out -->
+    <div id="root"><!--ssr-outlet--></div>
+    <!-- 注水 -->
+    <!--ssr-data-->
+    <script type="module" src="./src/share/render/client.tsx"></script>
+  </body>
+</html>
