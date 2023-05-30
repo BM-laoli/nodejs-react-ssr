@@ -1,21 +1,9 @@
 import { useContext, createContext } from 'react';
 
-const InitStateContext = createContext({
-  name: '',
-  page: '', // home or pro
-  message: '',
-  list: [],
-  // 页面特定的 每个页面都不一样
-  data: '',
-});
+const InitStateContext = createContext({});
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'changeTheme':
-      return {
-        ...state,
-        ...action.payload,
-      };
     default:
       return {
         ...state,

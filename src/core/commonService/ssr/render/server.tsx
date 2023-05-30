@@ -4,26 +4,18 @@ import { renderToString } from 'react-dom/server';
 import { reducer, InitStateContext } from '../hooks/useInitState';
 
 const App = (props) => {
-  const [state, dispatch] = useReducer(reducer, props.data);
+  const [state, dispatch] = useReducer(reducer, props.initState);
 
   return (
-    // @ts-ignore
     <InitStateContext.Provider value={[state, dispatch]}>
       {props.children}
-      <div
-        dangerouslySetInnerHTML={{
-          __html: ` <script>window.__INIT_STATE__ = ${JSON.stringify(
-            props.data,
-          )};</script>`,
-        }}
-      ></div>
     </InitStateContext.Provider>
   );
 };
 
-const render = (PageContent, data) => {
+const render = (PageContent, initState) => {
   return renderToString(
-    <App data={data}>
+    <App initState={initState}>
       <PageContent></PageContent>
     </App>,
   );

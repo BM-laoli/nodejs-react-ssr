@@ -6,8 +6,8 @@
     "tsConfigPath": "./tsconfig.json",
     "assets": [
       {
-        "include": "static/**/*",
-        "outDir": "./dist/",
+        "include": "../static/**/*",
+        "outDir": "./dist/static",
         "watchAssets": true
       }
     ]
