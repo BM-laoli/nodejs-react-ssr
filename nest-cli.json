@@ -1,5 +1,15 @@
 {
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
-  "webpackConfigPath":"./webpack.config.js"
+  "compilerOptions": {
+    "webpack": false,
+    "tsConfigPath": "./tsconfig.json",
+    "assets": [
+      {
+        "include": "static/**/*",
+        "outDir": "./dist/",
+        "watchAssets": true
+      }
+    ]
+  }
 }

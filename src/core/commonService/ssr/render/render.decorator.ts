@@ -1,5 +1,5 @@
 import { applyDecorators } from '@nestjs/common';
-import { PageReactContent } from '../types';
+import { PageReactContent } from '../../types';
 
 export const RenderReact = (pageContent: PageReactContent) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

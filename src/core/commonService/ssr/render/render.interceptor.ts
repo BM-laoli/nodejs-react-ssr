@@ -11,7 +11,8 @@ import { render } from './server';
 import { ViteDevServer } from 'vite';
 import { resolve } from 'path';
 import { readFileSync } from 'fs';
-import { PageReactContent } from '../types';
+import { PageReactContent } from '../../types';
+
 
 interface InterPipRender {
   req: Request;
@@ -54,12 +55,12 @@ export class RenderInterceptor implements NestInterceptor {
 
       if (process.env.NODE_ENV_ === 'production') {
         template = readFileSync(
-          resolve(__dirname, '../../../client', 'index.html'),
+          resolve(__dirname, '../../../static', 'index.html'),
           'utf-8',
         );
       } else {
         template = readFileSync(
-          resolve(__dirname, '../../../', 'index.html'),
+          resolve(__dirname, '../../../static', 'index.html'),
           'utf-8',
         );
       }

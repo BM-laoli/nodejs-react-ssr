@@ -1,7 +1,6 @@
 import React, { useReducer, useMemo } from 'react';
 import { hydrateRoot, createRoot } from 'react-dom/client';
 import { InitStateContext, reducer } from '../hooks/useInitState';
-import Routes from '../Routes';
 
 // 脱水
 const get_initState = () => {
@@ -14,8 +13,8 @@ const App = (props) => {
   const [state, dispatch] = useReducer(reducer, get_initState());
 
   const Component = useMemo(() => {
-    const CH = Routes[state?.page] || <></>;
-    return <CH></CH>;
+    // const CH = Routes[state?.page] || <></>;
+    return <></>;
   }, []);
 
   return (

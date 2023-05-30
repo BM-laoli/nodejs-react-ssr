@@ -1,12 +1,11 @@
-import React, { FC } from 'react';
-import { useInitState } from '../share/hooks/useInitState';
+import React, { FC, useState } from 'react';
 
 export interface InterButton {
   title: string;
 }
 
 const Button: FC<InterButton> = (props) => {
-  const [state] = useInitState();
+  const [state] = useState();
 
   return (
     <>
