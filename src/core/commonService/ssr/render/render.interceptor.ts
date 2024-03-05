@@ -9,6 +9,7 @@ import { Observable, from } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { render } from './server';
 import { PageReactContent } from '../../types';
+import { Reflector } from '@nestjs/core';
 
 interface InterPipRender {
   path: string;
@@ -17,15 +18,19 @@ interface InterPipRender {
 
 @Injectable()
 export class RenderInterceptor implements NestInterceptor {
+  constructor(private reflector: Reflector) {}
+
   intercept(context: ExecutionContext, next: CallHandler): Observable<string> {
-    const [req, res] = context.getArgs<[Request, Response]>();
-    const apc = context.getClass<any>().prototype;
+    const [req] = context.getArgs<[Request, Response]>();
     const name = context.getClass<any>().name.replace('Controller', '');
-    const PageReactContent = apc.Components[req.path];
+    const PageReactContent = this.reflector.get<any>(
+      'ReactComponent',
+      context.getHandler(),
+    );
 
     return next.handle().pipe(
       map(this.injectStyle()),
-      map(this.injectJS(name)),
+      map(this.injectJS(name.toLocaleLowerCase())),
       map(this.injectSEO()),
       map(async (value) => {
         return this.pipRender({
@@ -61,23 +66,23 @@ export class RenderInterceptor implements NestInterceptor {
     injectJS?: string,
   ) {
     return ` 
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="UTF-8">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      ${SEO || ''}
-      ${links || ''}
-    </head>
-    <body>
-      <div id="root"> ${reactContentString} </div>
-      <script>
-          window.__INIT_STATE__ = ${JSON.stringify(data)};
-      </script>
-      </body>
-      ${injectJS || ''}
-    </html>
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    ${SEO || ''}
+    ${links || ''}
+  </head>
+  <body>
+    <div id="root">${reactContentString}</div>
+    <script>
+        window.__INIT_STATE__ = ${JSON.stringify(data)};
+    </script>
+    </body>
+    ${injectJS || ''}
+  </html>
     `;
   }
 
@@ -96,7 +101,7 @@ export class RenderInterceptor implements NestInterceptor {
 
   private injectJS(name: string) {
     return (value) => {
-      value.injectJS = `<script src="./static/webSource/scripts/${name}.client.js"></script>`;
+      value.injectJS = `<script src="/webSource/scripts/${name}.js"></script>`;
       return value;
     };
   }

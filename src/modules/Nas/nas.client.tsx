@@ -1,6 +1,6 @@
 import React, { useReducer, useMemo, useRef, useEffect } from 'react';
-import { hydrateRoot, createRoot } from 'react-dom/client';
-import Home from './home.view';
+import { hydrateRoot } from 'react-dom/client';
+import Home from './nas.view';
 
 const get_initState = () => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -9,12 +9,10 @@ const get_initState = () => {
 };
 
 const App = (props) => {
-  return <>{props.children}</>;
+  return <Home></Home>;
 };
 
 hydrateRoot(
   document.getElementById('root'),
-  <App>
-    <Home initState={get_initState()}></Home>
-  </App>,
+  <App initState={get_initState()}></App>,
 );

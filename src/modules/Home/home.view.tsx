@@ -1,11 +1,7 @@
-import React, { useEffect, useState } from 'react';
-
+import React, { useState } from 'react';
+import { Link } from '@/core/commonUI';
 const Home = (props) => {
-  const [value, setValue] = useState('');
-
-  useEffect(() => {
-    console.log(props);
-  }, []);
+  const [value, setValue] = useState(props?.initState?.value || '');
 
   return (
     <div>
@@ -16,6 +12,7 @@ const Home = (props) => {
           setValue(e.target.value);
         }}
       />
+      <Link href="/nas">go nas</Link>
     </div>
   );
 };

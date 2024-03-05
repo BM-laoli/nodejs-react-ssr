@@ -1,13 +1,10 @@
 import { Controller, Get, Res, UseInterceptors } from '@nestjs/common';
-import { HomeService } from '../service/home.service';
-import { RenderReact, RenderInterceptor } from '@/core/commonService';
-import Home from '../home.view';
+import { RenderReact, RenderInterceptor } from '../../../core/commonService';
+import Nas from '../nas.view';
 
-@Controller('home')
+@Controller('nas')
 @UseInterceptors(RenderInterceptor)
-export class HomeController {
-  constructor(private readonly homeService: HomeService) {}
-
+export class NasController {
   private buildLinks() {
     return [
       '/static/css/layout/layout.css',
@@ -17,17 +14,10 @@ export class HomeController {
   }
 
   @Get('')
-  @RenderReact(Home)
+  @RenderReact(Nas)
   home() {
     return {
-      initState: {
-        value: 'What is 666 ?',
-        valuvlaue: {
-          xrrr: {
-            a: 1,
-          },
-        },
-      },
+      initState: {},
       pageInfo: {
         title: 'title - test',
         description: 'description - test',

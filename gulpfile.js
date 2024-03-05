@@ -1,4 +1,4 @@
-const gulp = require('gulp');
-const myTask = require('./script/index.js');
+const { watch } = require('gulp');
+const { defaultTask } = require('./tools/gulp/dev.client.js');
 
-gulp.task('read', myTask.loadAllFile);
+exports.default = defaultTask;

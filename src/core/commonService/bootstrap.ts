@@ -9,8 +9,9 @@ import { ConfigModule } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { castArray } from 'lodash';
-import { createServer as createViteServer } from 'vite';
 import { ExceptionFilter } from '@nestjs/common';
+import { routers, InterRouter } from '../../../conf/router';
+import { join } from 'path';
 
 export class BootstrapModuleFactory {
   public static create(_module: Type<any> | Array<Type<any>>): DynamicModule {
@@ -44,18 +45,13 @@ export interface IBootstrapOptions {
 }
 async function bootstrap(module: DynamicModule, options: IBootstrapOptions) {
   const app = await NestFactory.create<NestExpressApplication>(module);
-  const vite = await createViteServer({
-    server: {
-      middlewareMode: true,
-    },
-    appType: 'custom',
+  app.useStaticAssets(join(__dirname, '../../../', 'webSource'), {
+    prefix: '/webSource',
   });
-  app.use((req, res, next) => {
-    req['viteServer'] = vite;
-    next();
+  app.useStaticAssets(join(__dirname, '../../../', 'static'), {
+    prefix: '/static',
   });
-  app.use(vite.middlewares);
+
   await app.listen(3000);
 }
-
 export { bootstrap };

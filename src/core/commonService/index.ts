@@ -4,3 +4,8 @@ export * from './ssr/hooks/useInitState';
 
 export * from './types';
 export * from './bootstrap';
+
+const getTest666 = () => {
+  console.log('getTest666');
+};
+export { getTest666 };
